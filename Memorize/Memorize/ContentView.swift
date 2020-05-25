@@ -13,15 +13,16 @@ struct ContentView: View {
     
     var body: some View {
         HStack {
-            ForEach(viewModel.cards) { card in
+            ForEach(viewModel.cards.shuffled()) { card in
                 CardView(card: card).onTapGesture {
                     self.viewModel.choose(card: card)
                 }
+                .aspectRatio(2 / 3, contentMode: .fit)
             }
         }
         .padding()
         .foregroundColor(Color.orange)
-        .font(Font.largeTitle)
+        .font(viewModel.cards.count > 8 ? Font.headline : Font.largeTitle)
     }
 }
 
