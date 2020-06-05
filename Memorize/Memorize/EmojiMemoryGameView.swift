@@ -12,20 +12,24 @@ struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
-        Grid (viewModel.cards) { card in
-            CardView(card: card).onTapGesture {
+        VStack {
+            Grid (viewModel.cards) { card in
+                CardView(card: card).onTapGesture {
                     self.viewModel.choose(card: card)
+                }
+                .padding(self.cardPadding)
             }
-            .padding(self.cardPadding)
+            .padding()
+            .foregroundColor(viewModel.themeColor)
+            
+            GameControls(score: viewModel.score, title: viewModel.themeName, color: viewModel.themeColor, buttonAction: viewModel.startNewGame)
+           .padding([.leading, .trailing, .bottom])
         }
-        .padding()
-        .foregroundColor(Color.orange)
     }
     
     // MARK: - Drawing Constants
     
     let cardPadding: CGFloat = 5
-    
 }
 
 struct CardView: View {
@@ -62,6 +66,31 @@ struct CardView: View {
     
     func fontSize(for size: CGSize) -> CGFloat {
         min(size.width, size.height) * 0.75
+    }
+}
+
+struct GameControls: View {
+    var score: Int
+    var title: String
+    var color: Color
+    var buttonAction: () -> Void
+    
+    var body: some View {
+        HStack {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Score: \(score)")
+                Spacer()
+                Text(title)
+                    .font(.title)
+                    .foregroundColor(color)
+                Spacer()
+                Button("New Game") {
+                    self.buttonAction()
+                }
+                
+            }
+            .font(.headline)
+        }
     }
 }
 
